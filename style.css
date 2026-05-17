@@ -1,0 +1,94 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Noto Sans Bengali',Arial,sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:linear-gradient(
+    90deg,
+    #CCA965 0%,
+    #E0C284 50%,
+    #EAD5AA 100%
+  );
+  color:#222;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  padding-top: env(safe-area-inset-top);
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+
+input,
+textarea{
+  width:100%;
+  border:none;
+  outline:none;
+}
+
+#app{
+  width:100%;
+  max-width:430px;
+  height:100dvh;
+  background:transparent;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 10px rgba(0,0,0,.10);
+}
+
+.screen{
+  display:none;
+  width:100%;
+  height:100%;
+}
+
+.screen.active{
+  display:block;
+}
+
+.receive{
+  color:#b51e23;
+}
+
+.give{
+  color:#118a4d;
+}
+
+.transaction-list{
+  display:none;
+}
+
+html::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(
+    90deg,
+    #CCA965 0%,
+    #E0C284 50%,
+    #EAD5AA 100%
+  );
+  z-index:99999;
+}
