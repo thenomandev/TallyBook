@@ -443,7 +443,6 @@ const newCust = {
   openingBalance: opening,
   createdAt: Date.now(),
   avatarColor: randomColor
-  createdAt: Date.now()
 };
       
       await addCustomer(newCust);
