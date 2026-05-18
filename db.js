@@ -1,4 +1,4 @@
-const DB_NAME = "tallykhata_clone_db";
+const DB_NAME = "tallybook_clone_db";
 const DB_VERSION = 1;
 const CUSTOMER_STORE = "customers";
 const TXN_STORE = "transactions";
