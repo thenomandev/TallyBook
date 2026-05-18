@@ -102,7 +102,7 @@ const amountClass =
 
     let timeText = "এইমাত্র";
 
-    const refTime = cust.createdAt || Date.now();
+    const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
     const diffMs = Date.now() - refTime;
     const mins = Math.floor(diffMs / 60000);
     const hours = Math.floor(mins / 60);
@@ -383,6 +383,9 @@ if (saveTxnBtn) {
     };
 
     await addTransaction(newTxn);
+
+currentCustomer.lastActivityAt = Date.now();
+await updateCustomer(currentCustomer);
     
     txnGive.value = "";
     txnReceive.value = "";
