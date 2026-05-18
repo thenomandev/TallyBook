@@ -65,7 +65,13 @@ async function getCustomers() {
     const tx = database.transaction(CUSTOMER_STORE, "readonly");
     const req = tx.objectStore(CUSTOMER_STORE).getAll();
 
-    req.onsuccess = () => resolve(req.result || []);
+    req.onsuccess = () => {
+  const customers = req.result || [];
+
+  customers.sort((a, b) => b.createdAt - a.createdAt);
+
+  resolve(customers);
+};
     req.onerror = () => reject(req.error);
   });
 }

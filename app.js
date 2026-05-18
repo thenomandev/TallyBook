@@ -423,7 +423,18 @@ if (saveCustomerBtn) {
     } else {
      
  const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
-const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+ const lastColor = customers.length
+  ? customers[customers.length - 1].avatarColor
+  : null;
+
+const availableColors = avatarColors.filter(
+  color => color !== lastColor
+);
+
+const randomColor =
+  availableColors[
+    Math.floor(Math.random() * availableColors.length)
+  ];
 
 const newCust = {
   id: Date.now().toString(),
@@ -432,6 +443,7 @@ const newCust = {
   openingBalance: opening,
   createdAt: Date.now(),
   avatarColor: randomColor
+  createdAt: Date.now()
 };
       
       await addCustomer(newCust);
