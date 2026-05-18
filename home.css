@@ -27,6 +27,7 @@
   position:relative;
   z-index:300;
   flex-shrink:0;
+  padding-top: env(safe-area-inset-top);
 }
 
 .gold-header-top{
@@ -37,22 +38,23 @@
 }
 
 .gold-business-pill{
-  height:42px;
+  height:30px;
   padding:0 14px;
   border-radius:999px;
-  background:#fff7d8;
+  min-width:120px;
+  background:#f9f5ea;
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:8px;
   font-size:14px;
-  font-weight:700;
-  color:#4a3a12;
+  font-weight:500;
+  color:#212121;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 .gold-crown{
-  width:24px;
-  height:24px;
+  width:20px;
+  height:20px;
   border-radius:50%;
   background:#f2d36a;
   display:flex;
@@ -140,15 +142,15 @@
 
 .gold-summary-layer{
   position:relative;
-  z-index:1;
-  padding:12px 12px 8px;
+  z-index:250;
+  padding:12px 0 8px;
   background:#fff;
 }
 
 .gold-summary-card{
-  background:transparent;
+  background:#fff;
   border-radius:0;
-  padding:0;
+  padding:0 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -185,7 +187,7 @@
   z-index:300;
   flex:1;
   min-height:0;
-  margin-top:-8px;
+  margin-top:-28px;
   background:#fff;
   border-radius:26px 26px 0 0;
   overflow-y:auto;
