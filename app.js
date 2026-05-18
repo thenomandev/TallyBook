@@ -45,6 +45,12 @@ const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
+const moneyInputs = document.querySelectorAll(".money-input");
+const calcKeys = document.querySelectorAll(".calc-key");
+
+let activeMoneyInput = null;
+let calcExpression = "0";
+
 const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
@@ -56,6 +62,8 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
+  history.replaceState({screen:"home"}, "");
+  history.pushState({screen:"ready"}, "");
 });
 
 async function loadDashboard() {
@@ -92,9 +100,6 @@ const amountClass =
   bal > 0 ? "red-amount" :
   "zero-amount";
 
-    const avatarColors = ["green","yellow","blue","pink"];
-    const colorClass = avatarColors[list.indexOf(cust) % 4];
-
     let timeText = "এইমাত্র";
 
     const refTime = cust.createdAt || Date.now();
@@ -115,8 +120,10 @@ const amountClass =
 
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar ${colorClass}">
-          ${cust.name.charAt(0).toUpperCase()}
+        <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
+          ${cust.name.trim().length >= 2
+  ? cust.name.trim().substring(0,2).toUpperCase()
+  : cust.name.trim().charAt(0).toUpperCase()}
         </div>
 
         <div>
@@ -185,10 +192,17 @@ function startLiveTimer(cust, txns) {
 async function openLedger(customer) {
   currentCustomer = customer;
   switchScreen(ledgerScreen);
+history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
-  ledgerAvatar.textContent = customer.name.charAt(0).toUpperCase();
-  
+
+ledgerAvatar.textContent =
+  customer.name.trim().length >= 2
+    ? customer.name.trim().substring(0,2).toUpperCase()
+    : customer.name.trim().charAt(0).toUpperCase();
+
+ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
   
@@ -331,6 +345,7 @@ if (optEdit) {
     customerPhone.value = currentCustomer.phone || "";
     if (openingBalContainer) openingBalContainer.style.display = "none"; 
     switchScreen(customerFormScreen);
+history.pushState({screen:"form"}, "");
   };
 }
 
@@ -406,13 +421,18 @@ if (saveCustomerBtn) {
       const updated = customers.find(c => c.id === currentCustomer.id);
       await openLedger(updated || currentCustomer);
     } else {
-      const newCust = {
-        id: Date.now().toString(),
-        name: name,
-        phone: phone,
-        openingBalance: opening,
-        createdAt: Date.now()
-      };
+     
+ const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
+const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+
+const newCust = {
+  id: Date.now().toString(),
+  name: name,
+  phone: phone,
+  openingBalance: opening,
+  createdAt: Date.now(),
+  avatarColor: randomColor
+};
       
       await addCustomer(newCust);
       await loadDashboard();
@@ -435,28 +455,21 @@ if (openCustomerModal) {
     customerOpening.value = "";
     if (openingBalContainer) openingBalContainer.style.display = "block";
     switchScreen(customerFormScreen);
+history.pushState({screen:"form"}, "");
   };
 }
 
 /* NAVIGATION BACKS */
-if (backToHome) {
-  backToHome.onclick = async () => {
-    if (liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
-  };
-}
+document.addEventListener("click", async (e)=>{
+  const backBtn = e.target.closest(".back-btn");
 
-if (backFromCustomerForm) {
-  backFromCustomerForm.onclick = async () => {
-    if (currentCustomer) {
-      switchScreen(ledgerScreen);
-    } else {
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-  };
-}
+  if(!backBtn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  await handleUniversalBack();
+});
 
 /* LIVE SEARCH */
 if (searchInput) {
@@ -490,3 +503,153 @@ if (txnDate) {
     }
   };
 }
+
+window.onpopstate = async function () {
+  const handled = await handleUniversalBack();
+
+  if(handled){
+    history.pushState({screen:"ui"}, "");
+  }
+};
+
+const inlineCalculator = document.getElementById("inlineCalculator");
+
+function isTextInput(el){
+  return !!(
+    el &&
+    (
+      el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA"
+    )
+  );
+}
+
+function hideCalculator(){
+  inlineCalculator.classList.remove("show");
+  activeMoneyInput = null;
+}
+
+function hideKeyboard(){
+  if(isTextInput(document.activeElement)){
+    document.activeElement.blur();
+  }
+}
+
+function closeTransientUI(){
+  hideCalculator();
+  hideKeyboard();
+}
+
+function hasTransientUIOpen(){
+  return (
+    inlineCalculator.classList.contains("show") ||
+    isTextInput(document.activeElement)
+  );
+}
+
+async function handleUniversalBack(){
+  if(hasTransientUIOpen()){
+    closeTransientUI();
+
+    if(ledgerScreen.classList.contains("active")){
+      history.replaceState({screen:"ledger"}, "");
+    }else if(customerFormScreen.classList.contains("active")){
+      history.replaceState({screen:"form"}, "");
+    }else{
+      history.replaceState({screen:"home"}, "");
+    }
+
+    return true;
+  }
+
+  if(customerFormScreen.classList.contains("active")){
+  if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
+    currentCustomer = null;
+    await loadDashboard();
+    switchScreen(homeScreen);
+  }else{
+    switchScreen(ledgerScreen);
+  }
+  return true;
+}
+
+  if(ledgerScreen.classList.contains("active")){
+    if(liveInterval) clearInterval(liveInterval);
+    await loadDashboard();
+    switchScreen(homeScreen);
+    return true;
+  }
+
+  return false;
+}
+
+moneyInputs.forEach(input=>{
+  const activateInput = ()=>{
+    hideKeyboard();
+
+    activeMoneyInput = input;
+    calcExpression = input.value || "";
+    inlineCalculator.classList.add("show");
+  };
+
+  input.addEventListener("pointerdown", activateInput);
+});
+
+calcKeys.forEach(key=>{
+  key.addEventListener("click", ()=>{
+    if(!activeMoneyInput) return;
+
+    const val = key.dataset.key;
+
+    if(val === "AC"){
+      calcExpression = "";
+    }
+    else if(val === "BACK"){
+      calcExpression = calcExpression.slice(0,-1);
+    }
+    
+else if(val === "="){
+  try{
+    const safeExpr = calcExpression
+      .replace(/×/g,"*")
+      .replace(/÷/g,"/");
+
+    if(!/^[0-9+\-*/%.() ]+$/.test(safeExpr)){
+      throw new Error("Invalid");
+    }
+
+    calcExpression = String(
+      Function(
+        "return (" + safeExpr.replace(/%/g,"/100") + ")"
+      )()
+    );
+
+    activeMoneyInput.value = calcExpression;
+  }catch{
+    calcExpression = "";
+    activeMoneyInput.value = "";
+  }
+}
+
+    else{
+      calcExpression += val;
+    }
+
+    activeMoneyInput.value = calcExpression;
+  });
+});
+
+if(txnNote){
+  txnNote.addEventListener("focus", ()=>{
+    hideCalculator();
+  });
+}
+
+document.addEventListener("focusin",(e)=>{
+  if(
+    isTextInput(e.target) &&
+    !e.target.classList.contains("money-input")
+  ){
+    hideCalculator();
+  }
+});

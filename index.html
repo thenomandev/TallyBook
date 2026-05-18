@@ -199,7 +199,7 @@
 
     <div class="input-item" id="openingBalContainer">
       <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
-      <input id="customerOpening" type="number" placeholder="০.০০" />
+      <input id="customerOpening" type="text" inputmode="none" readonly placeholder="০.০০" class="money-input" />
     </div>
 
     <button id="saveCustomerBtn" class="submit-btn">
@@ -264,12 +264,12 @@
 
       <div class="txn-box">
         <span class="taka-icon">৳</span>
-        <input id="txnGive" type="number" placeholder="দিলাম/বেচা" />
+        <input id="txnGive" type="text" inputmode="none" readonly placeholder="দিলাম/বেচা" class="money-input" />
       </div>
 
       <div class="txn-box">
         <span class="taka-icon">৳</span>
-        <input id="txnReceive" type="number" placeholder="পেলাম" />
+        <input id="txnReceive" type="text" inputmode="none" readonly placeholder="পেলাম" class="money-input" />
       </div>
 
     </div>
@@ -336,6 +336,33 @@
 
 </section>
 
+</div>
+
+<div id="inlineCalculator" class="inline-calculator">
+  <button class="calc-key" data-key="AC">AC</button>
+  <button class="calc-key" data-key="%">%</button>
+  <button class="calc-key" data-key="/">÷</button>
+  <button class="calc-key" data-key="*">×</button>
+
+  <button class="calc-key" data-key="7">7</button>
+  <button class="calc-key" data-key="8">8</button>
+  <button class="calc-key" data-key="9">9</button>
+  <button class="calc-key" data-key="-">-</button>
+
+  <button class="calc-key" data-key="4">4</button>
+  <button class="calc-key" data-key="5">5</button>
+  <button class="calc-key" data-key="6">6</button>
+  <button class="calc-key" data-key="+">+</button>
+
+  <button class="calc-key" data-key="1">1</button>
+  <button class="calc-key" data-key="2">2</button>
+  <button class="calc-key" data-key="3">3</button>
+  <button class="calc-key calc-equals" data-key="=">=</button>
+
+  <button class="calc-key" data-key="BACK">⌫</button>
+  <button class="calc-key" data-key="0">0</button>
+  <button class="calc-key" data-key=".">.</button>
+  <button class="calc-key" data-key="00">00</button>
 </div>
 
 <script src="db.js"></script>

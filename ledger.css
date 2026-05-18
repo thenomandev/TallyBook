@@ -40,9 +40,9 @@
 }
 
 #ledgerName {
-  font-size:18px;
-  font-weight:700;
-  color:#1a1a1a;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .dropdown-menu {
@@ -98,7 +98,7 @@
 }
 
 .transaction-form {
-  padding:25px 15px;
+  padding:25px 15px 340px;
   background:#fff;
 }
 
@@ -194,4 +194,39 @@
   font-size:18px;
   font-weight:600;
   text-align:center;
+}
+
+.inline-calculator{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  background:#fff;
+  z-index:9999;
+  display:none;
+  grid-template-columns:repeat(4,1fr);
+  border-top:1px solid #ddd;
+}
+
+.inline-calculator.show{
+  display:grid;
+}
+
+.calc-key{
+  border:none;
+  border-right:1px solid #e5e5e5;
+  border-bottom:1px solid #e5e5e5;
+  background:#fff;
+  height:74px;
+  font-size:18px;
+  font-weight:500;
+  color:#222;
+}
+
+.calc-key:active{
+  background:#f3f3f3;
+}
+
+.calc-equals{
+  background:#f7dfe3;
 }
