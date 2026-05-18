@@ -89,6 +89,10 @@ function renderCustomerList(list) {
     return;
   }
 
+list.sort((a,b)=>
+  ((b.lastActivityAt || b.createdAt || 0) -
+   (a.lastActivityAt || a.createdAt || 0))
+);
   list.forEach(cust => {
     const div = document.createElement("div");
     div.className = "customer-item";
